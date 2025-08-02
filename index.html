@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cute to Creepy</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      transition: background 1s, color 1s;
+      background: pink;
+      color: #fff;
+    }
+
+    .glitter {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: yellow;
+      border-radius: 50%;
+      animation: fall 10s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { top: -10px; }
+      100% { top: 100vh; }
+    }
+
+    .content {
+      z-index: 1;
+      position: relative;
+      text-align: center;
+      margin-top: 20%;
+    }
+
+    .cute-button {
+      background: #ffccf9;
+      border: none;
+      padding: 20px 40px;
+      border-radius: 30px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #fff;
+      transition: all 0.3s;
+    }
+
+    .cute-button:hover {
+      background: #ff66cc;
+      color: white;
+    }
+
+    /* Horror mode styles */
+    body.horror {
+      background: #000;
+      color: red;
+      font-family: 'Creepster', cursive;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .jumpscare {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      background-image: url('https://i.imgur.com/ScbQoae.jpg'); /* scary face */
+      background-size: cover;
+      background-position: center;
+      z-index: 999;
+      animation: fadein 0.3s ease-in-out;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .puzzle {
+      display: none;
+      margin-top: 50px;
+    }
+
+    .door {
+      background: #222;
+      padding: 40px;
+      margin: 20px auto;
+      width: 200px;
+      color: white;
+      cursor: pointer;
+      border: 2px solid red;
+    }
+
+    .door:hover {
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="glitter" id="glitter"></div>
+
+  <div class="content" id="cuteContent">
+    <h1>✨ Welcome to SparkleLand ✨</h1>
+    <button class="cute-button" onclick="enterHorror()">Click Me!</button>
+  </div>
+
+  <div id="jumpscare" class="hidden"></div>
+
+  <div class="content puzzle hidden" id="puzzleGame">
+    <h1>Find the Right Door to Escape</h1>
+    <div class="door" onclick="doorClick(1)">Door 1</div>
+    <div class="door" onclick="doorClick(2)">Door 2</div>
+    <div class="door" onclick="doorClick(3)">Door 3</div>
+    <div id="result"></div>
+  </div>
+
+  <audio id="scream" src="https://www.soundjay.com/human/sounds/scream-01.mp3"></audio>
+
+  <script>
+    // Create falling glitter stars
+    function createStars() {
+      const glitter = document.getElementById('glitter');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.animationDuration = (5 + Math.random() * 5) + 's';
+        glitter.appendChild(star);
+      }
+    }
+
+    createStars();
+
+    function enterHorror() {
+      document.body.classList.add('horror');
+      document.getElementById('cuteContent').classList.add('hidden');
+      document.getElementById('jumpscare').classList.remove('hidden');
+      document.getElementById('jumpscare').classList.add('jumpscare');
+      document.getElementById('scream').play();
+
+      // After 2 seconds, remove jumpscare and show puzzle
+      setTimeout(() => {
+        document.getElementById('jumpscare').classList.add('hidden');
+        document.getElementById('puzzleGame').classList.remove('hidden');
+      }, 2000);
+    }
+
+    function doorClick(door) {
+      const result = document.getElementById('result');
+      if (door === 2) {
+        result.textContent = "✅ You escaped!";
+        result.style.color = 'lightgreen';
+      } else {
+        result.textContent = "❌ Wrong door. Try again...";
+        result.style.color = 'red';
+      }
+    }
+  </script>
+</body>
+</html>
